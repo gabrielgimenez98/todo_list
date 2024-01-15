@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 type task struct {
 	title  string
@@ -31,18 +35,43 @@ func main() {
 func handle_option(option int) {
 	switch option {
 	case 1:
-		fmt.Println("Vamos listar.")
+		show_tasks()
 	case 2:
-		fmt.Println("Vamos adicionar.")
+		handle_add_task()
 	case 3:
-		fmt.Println("Vamos concluir.")
+		handle_finish_task()
 	case 4:
-		fmt.Println("Vamos excluir.")
+		handle_exclude_task()
 	case 9:
 		fmt.Println("Saindo.")
 	default:
 		fmt.Println("Tente outra opção.")
 	}
+}
+
+func handle_add_task() {
+	var title string
+	var description string
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println("Titulo da tarefa")
+	title, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("Erro ao ler a entrada:", err)
+		return
+	}
+
+	fmt.Println("Descrição da tarefa")
+	description, err = reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("Erro ao ler a entrada:", err)
+		return
+	}
+
+	add_task(task{title, description, 0})
+
 }
 
 func add_task(new_task task) {
@@ -51,6 +80,65 @@ func add_task(new_task task) {
 
 func show_tasks() {
 	for i := 0; i < len(task_list); i++ {
-		fmt.Println(task_list[i])
+		if task_list[i].status == 0 {
+			fmt.Println(task_list[i].title)
+		}
+
 	}
+}
+
+func handle_finish_task() {
+	var title string
+	fmt.Println("qual titulo da tarefa concluida?")
+	reader := bufio.NewReader(os.Stdin)
+
+	title, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("Erro ao ler a entrada:", err)
+		return
+	}
+
+	finish_task((title))
+
+}
+
+func finish_task(title string) {
+	for i := 0; i < len(task_list); i++ {
+		if task_list[i].title == title {
+			task_list[i].status = 1
+			fmt.Println("tarefa concluida")
+			break
+
+		}
+	}
+
+}
+
+func handle_exclude_task() {
+	var title string
+	fmt.Println("qual titulo da tarefa a ser excluida?")
+	reader := bufio.NewReader(os.Stdin)
+
+	title, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("Erro ao ler a entrada:", err)
+		return
+	}
+
+	exclude_task((title))
+
+}
+
+func exclude_task(title string) {
+	for i := 0; i < len(task_list); i++ {
+		if task_list[i].title == title {
+			task_list[i].status = 2
+			fmt.Println("tarefa excluida")
+			break
+
+		}
+	}
+
 }
