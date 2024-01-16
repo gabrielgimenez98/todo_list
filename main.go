@@ -79,11 +79,9 @@ func add_task(new_task task) {
 }
 
 func show_tasks() {
-	for i := 0; i < len(task_list); i++ {
-		if task_list[i].status == 0 {
-			fmt.Println(task_list[i].title)
-		}
-
+	fmt.Println("Suas tarefas:")
+	for i, task := range task_list {
+		fmt.Println(i, " - ", task.title)
 	}
 }
 
