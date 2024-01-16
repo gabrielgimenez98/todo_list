@@ -81,7 +81,9 @@ func add_task(new_task task) {
 func show_tasks() {
 	fmt.Println("Suas tarefas:")
 	for i, task := range task_list {
-		fmt.Println(i, " - ", task.title)
+		if task.status == 0 {
+			fmt.Println(i, " - ", task.title)
+		}
 	}
 }
 
@@ -100,30 +102,36 @@ func handle_finish_task() {
 }
 
 func finish_task(index int) {
-	task_list = append(task_list[:index], task_list[index+1:]...)
+	for i, task := range task_list {
+		if i == index {
+			task_list[i].status = 1
+			fmt.Println("tarefa ", task.title, " concluida")
+			break
+
+		}
+	}
+
 }
 
 func handle_exclude_task() {
-	var title string
-	fmt.Println("qual titulo da tarefa a ser excluida?")
-	reader := bufio.NewReader(os.Stdin)
+	var index int
+	fmt.Println("qual o número da tarefa a ser excluida?")
 
-	title, err := reader.ReadString('\n')
-
+	_, err := fmt.Scanln(&index)
 	if err != nil {
-		fmt.Println("Erro ao ler a entrada:", err)
+		fmt.Println("Erro ao ler o número:", err)
 		return
 	}
 
-	exclude_task((title))
+	finish_task((index))
 
 }
 
-func exclude_task(title string) {
-	for i := 0; i < len(task_list); i++ {
-		if task_list[i].title == title {
+func exclude_task(index int) {
+	for i, task := range task_list {
+		if i == index {
 			task_list[i].status = 2
-			fmt.Println("tarefa excluida")
+			fmt.Println("tarefa ", task.title, " excluida")
 			break
 
 		}
