@@ -86,31 +86,21 @@ func show_tasks() {
 }
 
 func handle_finish_task() {
-	var title string
-	fmt.Println("qual titulo da tarefa concluida?")
-	reader := bufio.NewReader(os.Stdin)
+	var index int
+	fmt.Println("qual o número da tarefa concluida?")
 
-	title, err := reader.ReadString('\n')
-
+	_, err := fmt.Scanln(&index)
 	if err != nil {
-		fmt.Println("Erro ao ler a entrada:", err)
+		fmt.Println("Erro ao ler o número:", err)
 		return
 	}
 
-	finish_task((title))
+	finish_task((index))
 
 }
 
-func finish_task(title string) {
-	for i := 0; i < len(task_list); i++ {
-		if task_list[i].title == title {
-			task_list[i].status = 1
-			fmt.Println("tarefa concluida")
-			break
-
-		}
-	}
-
+func finish_task(index int) {
+	task_list = append(task_list[:index], task_list[index+1:]...)
 }
 
 func handle_exclude_task() {
